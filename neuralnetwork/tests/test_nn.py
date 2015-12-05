@@ -54,3 +54,24 @@ class TestNet(TestCase):
 		self.assertTrue(nn.sigmoid(0) == 0.5)
 		self.assertTrue(nn.sigmoid(-1e10) < 0.1)
 		self.assertTrue(nn.sigmoid(1e10) > 0.9)
+
+		self.assertTrue(nn.tanh(0) == 0)
+		self.assertTrue(nn.tanh(-1e10) < 0.1)
+		self.assertTrue(nn.tanh(1e10) > 0.9)
+		
+	def test_gradients(self, places=5, epsilon=1.0e-6):
+		step = 0.01
+		ran = 10.0 # Area to cover.
+
+		# f'(x) = f(x+h)-f(x)/h
+		def derivative(fun, x, epsilon):
+			return (fun(x+epsilon)-fun(x))/float(epsilon)
+
+		nums = numpy.arange(-ran, ran, step)
+		#self.assertAlmostEqual(nn.delta_sigmoid(nums), derivative(nn.sigmoid, nums, epsilon), places=places)
+		self.assertTrue(numpy.all(numpy.abs(nn.delta_sigmoid(nums) - derivative(nn.sigmoid, nums, epsilon)) < 0.1**places))
+		self.assertTrue(numpy.all(numpy.abs(nn.delta_tanh(nums) - derivative(nn.tanh, nums, epsilon)) < 0.1**places))
+		self.assertTrue(numpy.all(numpy.abs(nn.delta_linear(nums) - derivative(nn.linear, nums, epsilon)) < 0.1**places))
+		self.assertTrue(numpy.all(numpy.abs(nn.delta_softplus(nums) - derivative(nn.softplus, nums, epsilon)) < 0.1**places))
+
+
