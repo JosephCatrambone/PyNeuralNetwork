@@ -201,27 +201,3 @@ class NeuralNetwork(object):
 			if error < early_cutoff:
 				return
 
-if __name__=="__main__":
-	examples = numpy.asarray([
-		[0.0, 0.0],
-		[1.0, 0.0],
-		[0.0, 1.0],
-		[1.0, 0.1]
-	])
-
-	labels = numpy.asarray([
-		[0.0,],
-		[1.0,],
-		[1.0,],
-		[0.0,]
-	])
-
-	#nn = NeuralNetwork([2, 3, 1], [sigmoid, sigmoid, sigmoid], [delta_sigmoid, delta_sigmoid, delta_sigmoid], weight_range=1.0)
-	nn = NeuralNetwork([2, 3, 3, 1], ["tanh", "tanh", "tanh", "linear"])
-
-	#import pdb; pdb.set_trace()
-
-	nn.fit(examples, labels, epochs=100000, learning_rate=0.9, momentum=0.3, update_every=100, update_func=lambda i,x : print("Iteration {}: {}".format(i,x)))
-
-	print(nn.predict(examples))
-
