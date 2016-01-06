@@ -64,14 +64,21 @@ class TestNet(TestCase):
 		ran = 10.0 # Area to cover.
 
 		# f'(x) = f(x+h)-f(x)/h
+		# f'(x) = f(x+h)-f(x-h)/2h
 		def derivative(fun, x, epsilon):
-			return (fun(x+epsilon)-fun(x))/float(epsilon)
+			return (fun(x+epsilon)-fun(x-epsilon))/float(2.0*epsilon)
+
+		def gradient_order(p, q):
+			if numpy.max(p) == 0 and numpy.max(q) == 0:
+				return 0
+			else:
+				return numpy.abs(p - q)/max(numpy.max(p), numpy.max(q))
 
 		nums = numpy.arange(-ran, ran, step)
 		#self.assertAlmostEqual(nn.delta_sigmoid(nums), derivative(nn.sigmoid, nums, epsilon), places=places)
-		self.assertTrue(numpy.all(numpy.abs(nn.delta_sigmoid(nums) - derivative(nn.sigmoid, nums, epsilon)) < 0.1**places))
-		self.assertTrue(numpy.all(numpy.abs(nn.delta_tanh(nums) - derivative(nn.tanh, nums, epsilon)) < 0.1**places))
-		self.assertTrue(numpy.all(numpy.abs(nn.delta_linear(nums) - derivative(nn.linear, nums, epsilon)) < 0.1**places))
-		self.assertTrue(numpy.all(numpy.abs(nn.delta_softplus(nums) - derivative(nn.softplus, nums, epsilon)) < 0.1**places))
+		self.assertTrue(numpy.all(gradient_order(nn.delta_sigmoid(nums), derivative(nn.sigmoid, nums, epsilon)) < 0.1**places))
+		self.assertTrue(numpy.all(gradient_order(nn.delta_tanh(nums), derivative(nn.tanh, nums, epsilon)) < 0.1**places))
+		self.assertTrue(numpy.all(gradient_order(nn.delta_linear(nums), derivative(nn.linear, nums, epsilon)) < 0.1**places))
+		self.assertTrue(numpy.all(gradient_order(nn.delta_softplus(nums), derivative(nn.softplus, nums, epsilon)) < 0.1**places))
 
 
