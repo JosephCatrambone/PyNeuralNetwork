@@ -184,10 +184,10 @@ class NeuralNetwork(object):
 			
 			# Apply deltas
 			for i, dw in enumerate(dws):
-				last_delta_weights[i] = last_delta_weights[i]*momentum + ((learning_rate*dw)/float(batch_size))*(1.0-momentum)
+				last_delta_weights[i] = last_delta_weights[i]*momentum + ((learning_rate*dw)/float(batch_size))
 				self.weights[i] += last_delta_weights[i]
 			for i, db in enumerate(dbs):
-				last_delta_biases[i] = last_delta_biases[i]*momentum + ((learning_rate*db)/float(batch_size))*(1.0-momentum)
+				last_delta_biases[i] = last_delta_biases[i]*momentum + ((learning_rate*db)/float(batch_size))
 				self.biases[i] += last_delta_biases[i]
 			
 			# Calculate error
